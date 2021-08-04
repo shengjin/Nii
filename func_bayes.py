@@ -12,9 +12,9 @@ def prior_e(ecc):
 
 ########################################
 # prior: inclination in degree
-def prior_i(incl):
-    if(incl<incl_max) and (incl>=incl_min):
-        return 1/(incl_max-incl_min)
+def prior_cos_i(cos_incl):
+    if(cos_incl<cos_incl_max) and (cos_incl>=cos_incl_min):
+        return 1/(cos_incl_max-cos_incl_min)
     else:
         return 0
 
@@ -71,8 +71,9 @@ def prior_var_uke(var_uk_err):
 
 # NOTE order change for the last 3 varibale
 def para_boundary(x):
+    from numpy import cos
     if one_planet:
-        incl = x[0]
+        cos_incl = x[0]
         ecc = x[1]
         anO = x[2]
         po = x[3]
@@ -80,12 +81,12 @@ def para_boundary(x):
         period = x[7]
         mp = x[5]
         var_uke = x[6]
-        if (incl<incl_max) and (incl>incl_min) and (ecc<ecc_max) and (ecc>ecc_min) and (anO<an_Omega_max) and (anO>an_Omega_min) and (po<p_omega_max) and (po>p_omega_min) and (M0<M0_max) and (M0>M0_min) and (mp<p_mass_max) and (mp>p_mass_min) and (var_uke<var_uk_err_max) and (var_uke>var_uk_err_min) and (period<period_max) and (period>period_min):
+        if (cos_incl<cos_incl_max) and (cos_incl>cos_incl_min) and (ecc<ecc_max) and (ecc>ecc_min) and (anO<an_Omega_max) and (anO>an_Omega_min) and (po<p_omega_max) and (po>p_omega_min) and (M0<M0_max) and (M0>M0_min) and (mp<p_mass_max) and (mp>p_mass_min) and (var_uke<var_uk_err_max) and (var_uke>var_uk_err_min) and (period<period_max) and (period>period_min):
             return True
         else:
             return False
     else:
-        incl = x[0]
+        cos_incl = x[0]
         ecc = x[1]
         anO = x[2]
         po = x[3]
@@ -93,14 +94,14 @@ def para_boundary(x):
         period = x[7]
         mp = x[5]
         var_uke = x[6]
-        incl2 = x[8]
+        cos_incl2 = x[8]
         ecc2 = x[9]
         anO2 = x[10]
         po2 = x[11]
         M02 = x[12]
         period2 = x[14]
         mp2 = x[13]
-        if (incl<incl_max) and (incl>incl_min) and (ecc<ecc_max) and (ecc>ecc_min) and (anO<an_Omega_max) and (anO>an_Omega_min) and (po<p_omega_max) and (po>p_omega_min) and (M0<M0_max) and (M0>M0_min) and (mp<p_mass_max) and (mp>p_mass_min) and (var_uke<var_uk_err_max) and (var_uke>var_uk_err_min) and (period<period_max) and (period>period_min) and (incl2<incl_max) and (incl2>incl_min) and (ecc2<ecc_max) and (ecc2>ecc_min) and (anO2<an_Omega_max) and (anO2>an_Omega_min) and (po2<p_omega_max) and (po2>p_omega_min) and (M02<M0_max) and (M02>M0_min) and (mp2<p_mass_max) and (mp2>p_mass_min) and (period2<period_max) and (period2>period_min):
+        if (cos_incl<cos_incl_max) and (cos_incl>cos_incl_min) and (ecc<ecc_max) and (ecc>ecc_min) and (anO<an_Omega_max) and (anO>an_Omega_min) and (po<p_omega_max) and (po>p_omega_min) and (M0<M0_max) and (M0>M0_min) and (mp<p_mass_max) and (mp>p_mass_min) and (var_uke<var_uk_err_max) and (var_uke>var_uk_err_min) and (period<period_max) and (period>period_min) and (cos_incl2<cos_incl_max) and (cos_incl2>cos_incl_min) and (ecc2<ecc_max) and (ecc2>ecc_min) and (anO2<an_Omega_max) and (anO2>an_Omega_min) and (po2<p_omega_max) and (po2>p_omega_min) and (M02<M0_max) and (M02>M0_min) and (mp2<p_mass_max) and (mp2>p_mass_min) and (period2<period_max) and (period2>period_min):
             return True
         else:
             return False
@@ -108,10 +109,10 @@ def para_boundary(x):
 
 # NOTE order change for the last 3 varibale
 def log_prior(x):
-    from numpy import log
+    from numpy import log, cos
     # Gregory 2005
     if one_planet:
-        incl = x[0]
+        cos_incl = x[0]
         ecc = x[1]
         anO = x[2]
         po = x[3]
@@ -119,9 +120,9 @@ def log_prior(x):
         period = x[7]
         mp = x[5]
         var_uke = x[6]
-        l_p = log(prior_i(incl))+log(prior_e(ecc))+log(prior_anO(anO))+log(prior_po(po))+log(prior_M0(M0))+log(prior_period(period))+log(prior_mass(mp))+log(prior_var_uke(var_uke))
+        l_p = log(prior_cos_i(cos_incl))+log(prior_e(ecc))+log(prior_anO(anO))+log(prior_po(po))+log(prior_M0(M0))+log(prior_period(period))+log(prior_mass(mp))+log(prior_var_uke(var_uke))
     else:
-        incl = x[0]
+        cos_incl = x[0]
         ecc = x[1]
         anO = x[2]
         po = x[3]
@@ -129,14 +130,14 @@ def log_prior(x):
         period = x[7]
         mp = x[5]
         var_uke = x[6]
-        incl2 = x[8]
+        cos_incl2 = x[8]
         ecc2 = x[9]
         anO2 = x[10]
         po2 = x[11]
         M02 = x[12]
         period2 = x[14]
         mp2 = x[13]
-        l_p = log(prior_i(incl))+log(prior_e(ecc))+log(prior_anO(anO))+log(prior_po(po))+log(prior_M0(M0))+log(prior_period(period))+log(prior_mass(mp))+log(prior_var_uke(var_uke)) + log(prior_i(incl2))+log(prior_e(ecc2))+log(prior_anO(anO2))+log(prior_po(po2))+log(prior_M0(M02))+log(prior_period(period2))+log(prior_mass(mp2))
+        l_p = log(prior_cos_i(cos_incl))+log(prior_e(ecc))+log(prior_anO(anO))+log(prior_po(po))+log(prior_M0(M0))+log(prior_period(period))+log(prior_mass(mp))+log(prior_var_uke(var_uke)) + log(prior_cos_i(cos_incl2))+log(prior_e(ecc2))+log(prior_anO(anO2))+log(prior_po(po2))+log(prior_M0(M02))+log(prior_period(period2))+log(prior_mass(mp2))
     return l_p
 
 def log_likelihood(delta_dx_dy_sig, var_uke_init, delta_dx_dy_obs, delta_dx_dy_mc):
@@ -162,7 +163,7 @@ def log_likelihood(delta_dx_dy_sig, var_uke_init, delta_dx_dy_obs, delta_dx_dy_m
 def init_para():
     import numpy as np
     if one_planet:
-        incl_init = np.random.rand()*(incl_max-incl_min)+incl_min
+        cos_incl_init = np.random.rand()*(cos_incl_max-cos_incl_min)+cos_incl_min
         ecc_init = np.random.rand()*(ecc_max-ecc_min)+ecc_min
         anO_init = np.random.rand()*(an_Omega_max-an_Omega_min)+an_Omega_min
         po_init = np.random.rand()*(p_omega_max-p_omega_min)+p_omega_min
@@ -171,7 +172,7 @@ def init_para():
         var_uke_init = np.random.rand()*(var_uk_err_max-var_uk_err_min)+var_uk_err_min
         period_init = np.random.rand()*(period_max-period_min)+period_min
         x_init = np.zeros(n_dim, dtype=np.float64)
-        x_init[0] = incl_init 
+        x_init[0] = cos_incl_init 
         x_init[1] = ecc_init 
         x_init[2] = anO_init 
         x_init[3] = po_init 
@@ -180,7 +181,7 @@ def init_para():
         x_init[6] = var_uke_init 
         x_init[7] = period_init 
     else:
-        incl_init = np.random.rand()*(incl_max-incl_min)+incl_min
+        cos_incl_init = np.random.rand()*(cos_incl_max-cos_incl_min)+cos_incl_min
         ecc_init = np.random.rand()*(ecc_max-ecc_min)+ecc_min
         anO_init = np.random.rand()*(an_Omega_max-an_Omega_min)+an_Omega_min
         po_init = np.random.rand()*(p_omega_max-p_omega_min)+p_omega_min
@@ -189,7 +190,7 @@ def init_para():
         var_uke_init = np.random.rand()*(var_uk_err_max-var_uk_err_min)+var_uk_err_min
         period_init = np.random.rand()*(period_max-period_min)+period_min
         #
-        incl_init2 = np.random.rand()*(incl_max-incl_min)+incl_min
+        cos_incl_init2 = np.random.rand()*(cos_incl_max-cos_incl_min)+cos_incl_min
         ecc_init2 = np.random.rand()*(ecc_max-ecc_min)+ecc_min
         anO_init2 = np.random.rand()*(an_Omega_max-an_Omega_min)+an_Omega_min
         po_init2 = np.random.rand()*(p_omega_max-p_omega_min)+p_omega_min
@@ -197,7 +198,7 @@ def init_para():
         mp_init2 = np.random.rand()*(p_mass_max-p_mass_min)+p_mass_min
         period_init2 = np.random.rand()*(period_max-period_min)+period_min
         x_init = np.zeros(n_dim, dtype=np.float64)
-        x_init[0] = incl_init 
+        x_init[0] = cos_incl_init 
         x_init[1] = ecc_init 
         x_init[2] = anO_init 
         x_init[3] = po_init 
@@ -205,18 +206,18 @@ def init_para():
         x_init[5] = mp_init 
         x_init[6] = var_uke_init 
         x_init[7] = period_init 
-        x_init[8] = incl_init 
-        x_init[9] = ecc_init 
-        x_init[10] = anO_init 
-        x_init[11] = po_init 
-        x_init[12] = M0_init 
-        x_init[13] = mp_init 
-        x_init[14] = period_init 
+        x_init[8] = cos_incl_init2 
+        x_init[9] = ecc_init2 
+        x_init[10] = anO_init2 
+        x_init[11] = po_init2 
+        x_init[12] = M0_init2
+        x_init[13] = mp_init2 
+        x_init[14] = period_init2 
     return x_init
 
 def init_para_fix():
     import numpy as np
-    incl_init = 0.01
+    cos_incl_init = 0.01
     ecc_init = 0.001
     anO_init = 1.0 
     po_init = 2.2
@@ -225,7 +226,7 @@ def init_para_fix():
     var_uke_init = 0
     period_init = 365
     x_init = np.zeros(n_dim, dtype=np.float64)
-    x_init[0] = incl_init 
+    x_init[0] = cos_incl_init 
     x_init[1] = ecc_init 
     x_init[2] = anO_init 
     x_init[3] = po_init 
@@ -293,7 +294,7 @@ def gen_gaus_prop_sig():
     import numpy as np
     gp_sig = np.zeros(n_dim, dtype=np.float64)
     if one_planet:
-        gp_sig[0]=(incl_max-incl_min)*init_ratio_gp
+        gp_sig[0]=(cos_incl_max-cos_incl_min)*init_ratio_gp
         gp_sig[1]=(ecc_max-ecc_min)*init_ratio_gp
         gp_sig[2]=(an_Omega_max-an_Omega_min)*init_ratio_gp
         gp_sig[3]=(p_omega_max-p_omega_min)*init_ratio_gp
@@ -302,7 +303,7 @@ def gen_gaus_prop_sig():
         gp_sig[6]=(var_uk_err_max-var_uk_err_min)*init_ratio_gp
         gp_sig[7]=(period_max-period_min)*init_ratio_gp
     else:
-        gp_sig[0]=(incl_max-incl_min)*init_ratio_gp
+        gp_sig[0]=(cos_incl_max-cos_incl_min)*init_ratio_gp
         gp_sig[1]=(ecc_max-ecc_min)*init_ratio_gp
         gp_sig[2]=(an_Omega_max-an_Omega_min)*init_ratio_gp
         gp_sig[3]=(p_omega_max-p_omega_min)*init_ratio_gp
@@ -310,7 +311,7 @@ def gen_gaus_prop_sig():
         gp_sig[5]=(p_mass_max-p_mass_min)*init_ratio_gp
         gp_sig[6]=(var_uk_err_max-var_uk_err_min)*init_ratio_gp
         gp_sig[7]=(period_max-period_min)*init_ratio_gp
-        gp_sig[8]=(incl_max-incl_min)*init_ratio_gp
+        gp_sig[8]=(cos_incl_max-cos_incl_min)*init_ratio_gp
         gp_sig[9]=(ecc_max-ecc_min)*init_ratio_gp
         gp_sig[10]=(an_Omega_max-an_Omega_min)*init_ratio_gp
         gp_sig[11]=(p_omega_max-p_omega_min)*init_ratio_gp
@@ -502,8 +503,8 @@ def sigma_tune_boundary(scale_min, scale_max):
     import numpy as np
     sigma_bound = np.zeros((n_dim,2), dtype=float)
     if one_planet:
-        sigma_bound[0,0]=(incl_max-incl_min)*scale_min
-        sigma_bound[0,1]=(incl_max-incl_min)*scale_max
+        sigma_bound[0,0]=(cos_incl_max-cos_incl_min)*scale_min
+        sigma_bound[0,1]=(cos_incl_max-cos_incl_min)*scale_max
         sigma_bound[1,0]=(ecc_max-ecc_min)*scale_min
         sigma_bound[1,1]=(ecc_max-ecc_min)*scale_max
         sigma_bound[2,0]=(an_Omega_max-an_Omega_min)*scale_min
@@ -519,8 +520,8 @@ def sigma_tune_boundary(scale_min, scale_max):
         sigma_bound[7,0]=(period_max-period_min)*scale_min
         sigma_bound[7,1]=(period_max-period_min)*scale_max
     else:
-        sigma_bound[0,0]=(incl_max-incl_min)*scale_min
-        sigma_bound[0,1]=(incl_max-incl_min)*scale_max
+        sigma_bound[0,0]=(cos_incl_max-cos_incl_min)*scale_min
+        sigma_bound[0,1]=(cos_incl_max-cos_incl_min)*scale_max
         sigma_bound[1,0]=(ecc_max-ecc_min)*scale_min
         sigma_bound[1,1]=(ecc_max-ecc_min)*scale_max
         sigma_bound[2,0]=(an_Omega_max-an_Omega_min)*scale_min
@@ -536,8 +537,8 @@ def sigma_tune_boundary(scale_min, scale_max):
         sigma_bound[7,0]=(period_max-period_min)*scale_min
         sigma_bound[7,1]=(period_max-period_min)*scale_max
         #
-        sigma_bound[8,0]=(incl_max-incl_min)*scale_min
-        sigma_bound[8,1]=(incl_max-incl_min)*scale_max
+        sigma_bound[8,0]=(cos_incl_max-cos_incl_min)*scale_min
+        sigma_bound[8,1]=(cos_incl_max-cos_incl_min)*scale_max
         sigma_bound[9,0]=(ecc_max-ecc_min)*scale_min
         sigma_bound[9,1]=(ecc_max-ecc_min)*scale_max
         sigma_bound[10,0]=(an_Omega_max-an_Omega_min)*scale_min

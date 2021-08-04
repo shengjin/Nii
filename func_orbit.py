@@ -51,17 +51,17 @@ def newton_solver(M, e, EE0=None):
     return EE
 
 
-def func_as(time, ecc, osi, inc, OmegaO, M0, omega, per):
+def func_as(time, ecc, osi, cos_inc, OmegaO, M0, omega, per):
     # alpha, e*sin(omega), e*cos(omega), i, Omega, M0, period
     omega=radians(omega)
-    inc=radians(inc)
+
     OmegaO=radians(OmegaO)
     M0=radians(M0)
     coso=cos(omega)
     sino=sin(omega)
     cosOg=cos(OmegaO)
     sinOg=sin(OmegaO)
-    cosi=cos(inc)
+    cosi=cos_inc
     A=osi*(coso*cosOg-sino*sinOg*cosi)
     B=osi*(coso*sinOg+sino*cosOg*cosi)
     F=osi*(-sino*cosOg-coso*sinOg*cosi)
@@ -76,10 +76,10 @@ def func_as(time, ecc, osi, inc, OmegaO, M0, omega, per):
     return array([ra,dec])
     
 
-def cal_t_radec(time_con,mp_Mearth,ms_Msun,a_AU,d_pc,e_orbit,periapsis_omega,i_orbit, ascend_node_Omega, M0): 
+def cal_t_radec(time_con,mp_Mearth,ms_Msun,a_AU,d_pc,e_orbit,periapsis_omega,acos_i_orbit, ascend_node_Omega, M0): 
     # calc osi_alpha, esino, ecoso, period 
     osi_alpha, period = calc_osi_etc(mp_Mearth,ms_Msun,a_AU,d_pc,e_orbit,periapsis_omega)
-    as_cal_con=func_as(time_con, e_orbit, osi_alpha, i_orbit, ascend_node_Omega, M0, periapsis_omega, period)
+    as_cal_con=func_as(time_con, e_orbit, osi_alpha, acos_i_orbit, ascend_node_Omega, M0, periapsis_omega, period)
     return as_cal_con
     
 

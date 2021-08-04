@@ -6,7 +6,7 @@ if one_planet:
 else:
     n_dim = 15
 # 
-test_ar_start = 200000 # donot check ar before first * iteration
+test_ar_start = 20000 # donot check ar before first * iteration
 n_iter_tunesig = 20 # not big than 30, otherwise will dead! 
 target_ar = 0.24
 ar_min_crit = 0.16
@@ -26,7 +26,7 @@ scale_max = 0.5
 scale_bound = 300
 
 # iterations of mcmc
-n_iter = 500000
+n_iter = 50000
 n_iter_swap_av = 25
 # n_iter_swap = n_iter_swap_av +/- dn_swap
 dn_swap = 5
@@ -40,9 +40,11 @@ beta_PT = [0.01, 0.02, 0.05, 0.1, 0.2, 0.4, 0.7, 1.0]
 ecc_max = 1 
 ecc_min = 0
 #
-# in degree
-incl_max = 180 
-incl_min = 0
+## in degree
+#incl_max = 180 
+#incl_min = 0
+cos_incl_max = 1
+cos_incl_min = -1
 #
 # in degree
 an_Omega_max = 360

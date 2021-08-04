@@ -42,13 +42,13 @@ if debug:
 ##########################
 # astrometry sequence
 # as_cal_con shape: ra dec
-as_cal_con = func_orbit.cal_t_radec(time_con,mp_Mearth,ms_Msun,a_AU,d_pc,e_orbit,periapsis_omega,i_orbit, ascend_node_Omega, M0)
+as_cal_con = func_orbit.cal_t_radec(time_con,mp_Mearth,ms_Msun,a_AU,d_pc,e_orbit,periapsis_omega,cos_i_orbit, ascend_node_Omega, M0)
 #
 if one_planet:
     as_mu = np.transpose(as_cal_con)
 else:
     # add 2nd planet
-    as_cal_con2 = func_orbit.cal_t_radec(time_con,mp_Mearth2,ms_Msun,a_AU2,d_pc,e_orbit2,periapsis_omega2,i_orbit2, ascend_node_Omega2, M02)
+    as_cal_con2 = func_orbit.cal_t_radec(time_con,mp_Mearth2,ms_Msun,a_AU2,d_pc,e_orbit2,periapsis_omega2,cos_i_orbit2, ascend_node_Omega2, M02)
     as_mu1 = np.transpose(as_cal_con)
     as_mu2 = np.transpose(as_cal_con2)
     as_mu = as_mu1 + as_mu2 
