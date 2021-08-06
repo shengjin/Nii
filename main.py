@@ -90,6 +90,7 @@ delta_dx_dy_onerefstar = np.genfromtxt(i_dxdy_name)
 if ddebug:
     np.savetxt("delta_dx_dy_one.dat", np.transpose([delta_dx_dy_onerefstar[:,0], delta_dx_dy_onerefstar[:,1]]))
 
+delta_dx_dy_sig = np.genfromtxt("delta_dx_dy_sig.dat")
 chains_list = func_bayes.mcmc_PT(time_con, delta_dx_dy_onerefstar, delta_dx_dy_sig)
 
 n_PT = len(beta_PT)
