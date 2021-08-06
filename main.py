@@ -56,32 +56,40 @@ if debug:
     np.savetxt("as_mu.dat", np.transpose([as_mu[:,0],as_mu[:,1]]))
 
 
-##########################
-##### simulation delta dx dy
-delta_dx_dy_pm = func_ref.create_delta_dxdy(time_con, n_ref_stars, w_ra_dec, as_mu, noise_mean, noise_std, ref_stars_pm_ra, ref_stars_pm_dec)
-if ddebug:
-    np.savetxt("delta_dx_pm.dat", np.transpose([delta_dx_dy_pm[:,0,0],delta_dx_dy_pm[:,1,0]]))
-    np.savetxt("delta_dy_pm.dat", np.transpose([delta_dx_dy_pm[:,0,1],delta_dx_dy_pm[:,1,1]]))
-
-##### calc mean
-delta_dx_dy_mean = np.zeros((int(N_time)-1, 2), dtype=np.float64)
-delta_dx_dy_sig = np.zeros((int(N_time)-1, 2), dtype=np.float64)
-for i in range(int(N_time)-1):
-    delta_dx_dy_mean[i,0] = delta_dx_dy_pm[i,:,0].mean()
-    delta_dx_dy_mean[i,1] = delta_dx_dy_pm[i,:,1].mean()
-    delta_dx_dy_sig[i,0] = np.std(delta_dx_dy_pm[i,:,0])
-    delta_dx_dy_sig[i,1] = np.std(delta_dx_dy_pm[i,:,1])
-if debug:
-    np.savetxt("delta_dx_dy_mean.dat", np.transpose([delta_dx_dy_mean[:,0], delta_dx_dy_mean[:,1]]))
-    np.savetxt("delta_dx_dy_sig.dat", np.transpose([delta_dx_dy_sig[:,0], delta_dx_dy_sig[:,1]]))
-
+create_sim_delta_dxdy = False #True
+if create_sim_delta_dxdy:
+    ##########################
+    ##### simulation delta dx dy
+    delta_dx_dy_pm = func_ref.create_delta_dxdy(time_con, n_ref_stars, w_ra_dec, as_mu, noise_mean, noise_std, ref_stars_pm_ra, ref_stars_pm_dec)
+    if debug:
+        for i in range(delta_dx_dy_pm.shape[1]):
+            delta_dx_dy_name = "%s%s%s" % ("delta_dx_dy_", i, ".dat")
+            np.savetxt(delta_dx_dy_name, np.transpose([delta_dx_dy_pm[:,i,0],delta_dx_dy_pm[:,i,1]]))
+    ##### calc mean
+    delta_dx_dy_mean = np.zeros((int(N_time)-1, 2), dtype=np.float64)
+    delta_dx_dy_sig = np.zeros((int(N_time)-1, 2), dtype=np.float64)
+    for i in range(int(N_time)-1):
+        delta_dx_dy_mean[i,0] = delta_dx_dy_pm[i,:,0].mean()
+        delta_dx_dy_mean[i,1] = delta_dx_dy_pm[i,:,1].mean()
+        delta_dx_dy_sig[i,0] = np.std(delta_dx_dy_pm[i,:,0])
+        delta_dx_dy_sig[i,1] = np.std(delta_dx_dy_pm[i,:,1])
+    if debug:
+        np.savetxt("delta_dx_dy_mean.dat", np.transpose([delta_dx_dy_mean[:,0], delta_dx_dy_mean[:,1]]))
+        np.savetxt("delta_dx_dy_sig.dat", np.transpose([delta_dx_dy_sig[:,0], delta_dx_dy_sig[:,1]]))
 #figname = 'dt_dx_dy.png'
 #plot.plot_dx_dy_smltmean(time_dt, delta_dx_dy_mean, figname)
+    
 
 
 ##########################
 ## parallel tempering
-delta_dx_dy_onerefstar = delta_dx_dy_pm[:,0,:]
+i_tofit = 1
+i_dxdy_name =  "%s%s%s" % ("delta_dx_dy_", int(i_tofit), ".dat")
+# genformtxt
+delta_dx_dy_onerefstar = np.genfromtxt(i_dxdy_name)
+if ddebug:
+    np.savetxt("delta_dx_dy_one.dat", np.transpose([delta_dx_dy_onerefstar[:,0], delta_dx_dy_onerefstar[:,1]]))
+
 chains_list = func_bayes.mcmc_PT(time_con, delta_dx_dy_onerefstar, delta_dx_dy_sig)
 
 n_PT = len(beta_PT)
