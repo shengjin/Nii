@@ -2,6 +2,7 @@ import numpy as np
 import copy
 import time
 from scipy import constants
+import create_time_con
 #import pandas as pd
 #import pickle
 #from matplotlib.colors import LogNorm
@@ -21,23 +22,21 @@ ddebug = False
 print(time.ctime())
 
 ##########################
-# observation time sequrence in days
-# drop save random part
 time_con0 = np.linspace(t0,t1,int(N_time_init))
 np.savetxt("t_all0.dat", np.transpose([time_con0]))
-randn_shape_t = np.random.rand(len(time_con0))
-retain_ind = np.where(randn_shape_t > drop_ratio)
+#
+
+retain_ind = create_time_con.create_time_seg()
+#
 time_con = time_con0[retain_ind]
-N_time = len(time_con)
-
-
-
 
 time_dt = time_con[:-1]
 if debug:
     np.savetxt("t_all.dat", np.transpose([time_con]))
     np.savetxt('t_seq.out', np.transpose([time_dt]))
 
+
+N_time = len(time_con)
 
 ##########################
 # astrometry sequence

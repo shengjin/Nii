@@ -26,6 +26,8 @@ t1 = year*5
 # observation frequency
 N_time_init = 300.0
 drop_ratio = 0.3 # drop_ratio*100%
+drop_seg_min = 4
+drop_seg_max = 8
 
 # noise simulation
 noise_mean = 0.0
