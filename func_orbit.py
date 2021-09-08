@@ -50,6 +50,8 @@ def newton_solver(M, e, EE0=None):
         niter += 1
     return EE
 
+    
+
 
 def func_as(time, ecc, osi, cos_inc, OmegaO, M0, omega, per):
     # alpha, e*sin(omega), e*cos(omega), i, Omega, M0, period
@@ -82,6 +84,128 @@ def cal_t_radec(time_con,mp_Mearth,ms_Msun,a_AU,d_pc,e_orbit,periapsis_omega,aco
     as_cal_con=func_as(time_con, e_orbit, osi_alpha, acos_i_orbit, ascend_node_Omega, M0, periapsis_omega, period)
     return as_cal_con
     
+def cal_t_radec_fromAEI(M0, time_con,aei_file,mp_Mearth,ms_Msun,d_pc):
+    #
+    from inputsimobs import ms_Msun,d_pc
+    from math import cos,radians
+    import numpy as np
+    #
+    #NOTE
+    M_j = M0 #t_seg_para[0,6]
+    #
+    # Nrows of aei file: 0day,1a,2e,3i,4periomega,5nodeOmega,6M,7mass
+    Ndays_aei=aei_file.shape[0]
+    # Nrows of time_con
+    Ndays_timecon=time_con.shape[0]
+    #
+    # each time_con segment
+    para_start = aei_file[0,0:7]
+    # 
+    # calc mp_Mearth
+    # NOTE: this mass is generated from the aei file, may not = value in inputsimobs
+    # divided by earth and moon(1/81earth)
+    #print(aei_file[0,7])
+    mp_Mearth = aei_file[0,7]/3.0034146856628466e-06 # divide by earth/solar
+    #
+    as_cal_con=np.zeros((len(time_con),2), dtype=np.float64)
+    for i in range(len(time_con)-1):
+        # interpol end time paras
+        para_end = t_end_para(time_con[i+1], aei_file)
+        #
+        #print(para_start[0])
+        #print(para_end[0])
+        # derive all seg time para sequence
+        between_min = int(time_con[i])+1
+        between_max = int(time_con[i+1])
+        t_seg_para = t_seg_create(para_start, para_end, between_min, between_max, aei_file)
+        para_start = para_end
+        #
+        ###########################
+        ##### per time step not work right now
+        # should divide per time grid to sub_grid
+        ## cal as_cal_con_varipara
+        ###########################
+        #
+        # run t_seg_para as a whole list
+        t_j = t_seg_para[:,0]
+        a_j = t_seg_para[0,1]
+        e_j = t_seg_para[0,2]
+        i_j = t_seg_para[0,3]
+        cos_i_j = cos(radians(i_j))
+        perio_j = t_seg_para[0,4]
+        nodeO_j = t_seg_para[0,5]
+        #
+        # tail, not work at large time gap
+        #N_tail_arr = -3
+        #t_seg_para_tail = t_seg_para[N_tail_arr:,:]
+        #t_j = t_seg_para_tail[:,0]
+        #print(t_seg_para_tail)
+        #a_j = t_seg_para_tail[0,1]
+        #e_j = t_seg_para_tail[0,2]
+        #i_j = t_seg_para_tail[0,3]
+        #cos_i_j = cos(radians(i_j))
+        #perio_j = t_seg_para_tail[0,4]
+        #nodeO_j = t_seg_para_tail[0,5]
+        #
+        osi_alpha, period = calc_osi_etc(mp_Mearth,ms_Msun,a_j,d_pc,e_j,perio_j)
+        #print("osi,peri",osi_alpha,period)
+        as_cal_con_seg=func_as(t_j, e_j, osi_alpha, cos_i_j, nodeO_j, M_j, perio_j, period)
+        #print(as_cal_con_seg.shape)
+        as_cal_con[i,:]=as_cal_con_seg[:,0]
+        as_cal_con[i+1,:]=as_cal_con_seg[:,-1]
+        #print(as_cal_con[i,:])
+        #print(as_cal_con[i+1,:])
+        #return as_cal_con
+    as_mu = as_cal_con
+    #np.savetxt("as_mu_2.dat", np.transpose([as_mu[0,:],as_mu[1,:]]))
+    return as_mu
+
+
+def t_seg_create(para_start, para_end, between_min, between_max, aei_file):
+    import numpy as np
+    n_t_seg = between_max-between_min+1+2
+    #print(n_t_seg)
+    n_para_add1 = aei_file.shape[1]-1
+    t_seg_para = np.zeros((n_t_seg, n_para_add1), dtype=np.float64)
+    t_seg_para[0,:] = para_start
+    t_seg_para[-1,:] = para_end
+    for i in range(n_t_seg-2):
+        t_seg_para[i+1,:] = aei_file[between_min+i,0:n_para_add1]
+    return t_seg_para
+
+
+def t_end_para(t_end,aei_file):
+    import numpy as np
+    #print(t_end)
+    #print(aei_file[:,0])
+    end_err = aei_file[:,0] - t_end
+    #print(end_err)
+    #print(abs(end_err).argmin())
+    j = abs(end_err).argmin()
+    #print(aei_file[j-1:j+2,0])
+    para_end = np.zeros(aei_file.shape[1]-1)
+    para_end[0] = t_end
+    for l in range(len(para_end)-1):
+        para_end[l+1] = lagrange(t_end, aei_file[j-1:j+2,0], aei_file[j-1:j+2,l+1])
+    return para_end
+
+
+
+# Implementing Lagrange Interpolation
+def lagrange(xp, x_arr, y_arr):
+    #print(x_arr)
+    #print(y_arr)
+    if len(x_arr) != len(y_arr):
+        quit()
+    else:
+        yp = 0
+        for i in range(len(x_arr)):
+            p = 1
+            for j in range(len(y_arr)):
+                if i != j:
+                    p = p * (xp - x_arr[j])/(x_arr[i] - x_arr[j])
+            yp = yp + p * y_arr[i] 
+    return yp
 
 
 
