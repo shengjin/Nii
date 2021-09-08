@@ -21,18 +21,32 @@ ddebug = False
 
 print(time.ctime())
 
-##########################
-time_con0 = np.linspace(t0,t1,int(N_time_init))
-np.savetxt("t_all0.dat", np.transpose([time_con0]))
-#
+# new time seq or not
+new_time = False
 
-retain_ind = create_time_con.create_time_seg()
-#
-time_con = time_con0[retain_ind]
+# create new ref astrometry
+create_sim_delta_dxdy = False #True #True
+
+# ref star
+i_tofit = 0
+
+if new_time:
+    ##########################
+    time_con0 = np.linspace(t0,t1,int(N_time_init))
+    np.savetxt("t_all0.dat", np.transpose([time_con0]))
+    #
+    retain_ind = create_time_con.create_time_seg()
+    #
+    time_con = time_con0[retain_ind]
+    np.savetxt("t_all.dat", np.transpose([time_con]))
+else:
+    time_con = np.genfromtxt('t_all.dat')
+    np.savetxt("t_all_clone.dat", np.transpose([time_con]))
+
+
 
 time_dt = time_con[:-1]
 if debug:
-    np.savetxt("t_all.dat", np.transpose([time_con]))
     np.savetxt('t_seq.out', np.transpose([time_dt]))
 
 
@@ -56,7 +70,6 @@ if debug:
     np.savetxt("as_mu.dat", np.transpose([as_mu[:,0],as_mu[:,1]]))
 
 
-create_sim_delta_dxdy = False #True
 if create_sim_delta_dxdy:
     ##########################
     ##### simulation delta dx dy
@@ -80,17 +93,17 @@ if create_sim_delta_dxdy:
 #plot.plot_dx_dy_smltmean(time_dt, delta_dx_dy_mean, figname)
     
 
+delta_dx_dy_sig = np.genfromtxt("delta_dx_dy_sig.dat")
+np.savetxt("delta_dx_dy_sig.dat.clone", np.transpose([delta_dx_dy_sig[:,0], delta_dx_dy_sig[:,1]]))
 
 ##########################
 ## parallel tempering
-i_tofit = 1
 i_dxdy_name =  "%s%s%s" % ("delta_dx_dy_", int(i_tofit), ".dat")
 # genformtxt
 delta_dx_dy_onerefstar = np.genfromtxt(i_dxdy_name)
 if ddebug:
     np.savetxt("delta_dx_dy_one.dat", np.transpose([delta_dx_dy_onerefstar[:,0], delta_dx_dy_onerefstar[:,1]]))
 
-delta_dx_dy_sig = np.genfromtxt("delta_dx_dy_sig.dat")
 chains_list = func_bayes.mcmc_PT(time_con, delta_dx_dy_onerefstar, delta_dx_dy_sig)
 
 n_PT = len(beta_PT)

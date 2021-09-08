@@ -6,7 +6,7 @@ if one_planet:
 else:
     n_dim = 15
 # 
-test_ar_start = 20000 # donot check ar before first * iteration
+test_ar_start = 150000 # donot check ar before first * iteration
 n_iter_tunesig = 20 # not big than 30, otherwise will dead! 
 target_ar = 0.24
 ar_min_crit = 0.16
@@ -26,7 +26,7 @@ scale_max = 0.5
 scale_bound = 300
 
 # iterations of mcmc
-n_iter = 50000
+n_iter = 1000000
 n_iter_swap_av = 25
 # n_iter_swap = n_iter_swap_av +/- dn_swap
 dn_swap = 5

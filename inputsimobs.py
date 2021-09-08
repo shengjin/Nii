@@ -25,8 +25,8 @@ t0 = 0
 t1 = year*5
 # observation frequency
 N_time_init = 300.0
-drop_ratio = 0.3 # drop_ratio*100%
-drop_seg_min = 4
+drop_ratio = 0.15 # drop_ratio*100%
+drop_seg_min = 5
 drop_seg_max = 8
 
 # noise simulation
@@ -45,11 +45,11 @@ noise_std = 1.0
 ms_Msun = 1.0
 d_pc = 3.0
 #
-mp_Mearth = 8.1
+mp_Mearth = 3.1
 a_AU = 1.3
-e_orbit = 0.1
+e_orbit = 0.2
 # i_orbit: degree: 0-90 or 0-180 ?
-i_orbit = 30.1
+i_orbit = 50.0
 cos_i_orbit = cos(radians(i_orbit))
 # ascend_node_Omega: phase
 ascend_node_Omega =  30.0 # 0-360
