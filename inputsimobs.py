@@ -1,7 +1,8 @@
 from constant import year
 from math import radians,cos
 
-one_planet = True #False
+one_planet = False
+#one_planet = True #False
 
 
 #target star:
@@ -58,14 +59,14 @@ periapsis_omega = 200.0  # 0-360
 # M0: phase
 M0 =  100.0 # 0-360
 #
-mp_Mearth2 = 30.0
-a_AU2 = 2.0
-e_orbit2 = 0.1
-i_orbit2 = 20.5
-cos_i_orbit2 = cos(radians(i_orbit2))
-ascend_node_Omega2 =  100.0 # 0-360
-periapsis_omega2 = 20.0  # 0-360
-M02 =  200.0 # 0-360
+#mp_Mearth2 = 30.0
+#a_AU2 = 2.0
+#e_orbit2 = 0.1
+#i_orbit2 = 20.5
+#cos_i_orbit2 = cos(radians(i_orbit2))
+#ascend_node_Omega2 =  100.0 # 0-360
+#periapsis_omega2 = 20.0  # 0-360
+#M02 =  200.0 # 0-360
 #
 
 

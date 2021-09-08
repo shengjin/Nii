@@ -25,7 +25,7 @@ print(time.ctime())
 new_time = False
 
 # create new ref astrometry
-create_sim_delta_dxdy = False #True #True
+create_sim_delta_dxdy = True #True
 
 # ref star
 i_tofit = 0
@@ -52,23 +52,38 @@ if debug:
 
 N_time = len(time_con)
 
-##########################
-# astrometry sequence
-# as_cal_con shape: ra dec
-as_cal_con = func_orbit.cal_t_radec(time_con,mp_Mearth,ms_Msun,a_AU,d_pc,e_orbit,periapsis_omega,cos_i_orbit, ascend_node_Omega, M0)
+
+
 #
 if one_planet:
+    as_cal_con = func_orbit.cal_t_radec(time_con,mp_Mearth,ms_Msun,a_AU,d_pc,e_orbit,periapsis_omega,cos_i_orbit, ascend_node_Omega, M0)
     as_mu = np.transpose(as_cal_con)
 else:
+    ####################################
+    # two planet using dynamic-varied parameters generated from mercury6 package
     # add 2nd planet
-    as_cal_con2 = func_orbit.cal_t_radec(time_con,mp_Mearth2,ms_Msun,a_AU2,d_pc,e_orbit2,periapsis_omega2,cos_i_orbit2, ascend_node_Omega2, M02)
-    as_mu1 = np.transpose(as_cal_con)
-    as_mu2 = np.transpose(as_cal_con2)
+    ##################
+    # parameters
+    # aei files from mercury6
+    aei_file_name1 = "21.aei"
+    aei_file_name2 = "22.aei"
+    # M0 should be provided 
+    M01 = 100
+    M02 = 200
+    ##################
+    aei_file1 = np.genfromtxt(aei_file_name1)
+    aei_file2 = np.genfromtxt(aei_file_name2)
+    as_mu1 = func_orbit.cal_t_radec_fromAEI(M01, time_con,aei_file1,mp_Mearth,ms_Msun,d_pc)
+    as_mu2 = func_orbit.cal_t_radec_fromAEI(M02, time_con,aei_file2,mp_Mearth,ms_Msun,d_pc)
     as_mu = as_mu1 + as_mu2 
+    np.savetxt("as_mu.dat", np.transpose([as_mu[:,0],as_mu[:,1]]))
+    np.savetxt("as_mu21.dat", np.transpose([as_mu1[:,0],as_mu1[:,1]]))
+    np.savetxt("as_mu22.dat", np.transpose([as_mu2[:,0],as_mu2[:,1]]))
 
 if debug:
     np.savetxt("as_mu.dat", np.transpose([as_mu[:,0],as_mu[:,1]]))
 
+quit()
 
 if create_sim_delta_dxdy:
     ##########################
