@@ -1,7 +1,8 @@
 from inputsimobs import one_planet
 init_ratio_gp = 0.1
 
-if one_planet:
+one_planet_fit = True
+if one_planet_fit:
     n_dim = 8
 else:
     n_dim = 15
