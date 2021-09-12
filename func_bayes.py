@@ -1,5 +1,5 @@
 from inputbayes import *
-from inputsimobs import one_planet
+#from inputsimobs import one_planet
 import copy
 
 ########################################
@@ -72,7 +72,7 @@ def prior_var_uke(var_uk_err):
 # NOTE order change for the last 3 varibale
 def para_boundary(x):
     from numpy import cos
-    if one_planet:
+    if one_planet_fit:
         cos_incl = x[0]
         ecc = x[1]
         anO = x[2]
@@ -111,7 +111,7 @@ def para_boundary(x):
 def log_prior(x):
     from numpy import log, cos
     # Gregory 2005
-    if one_planet:
+    if one_planet_fit:
         cos_incl = x[0]
         ecc = x[1]
         anO = x[2]
@@ -162,7 +162,7 @@ def log_likelihood(delta_dx_dy_sig, var_uke_init, delta_dx_dy_obs, delta_dx_dy_m
 
 def init_para():
     import numpy as np
-    if one_planet:
+    if one_planet_fit:
         cos_incl_init = np.random.rand()*(cos_incl_max-cos_incl_min)+cos_incl_min
         ecc_init = np.random.rand()*(ecc_max-ecc_min)+ecc_min
         anO_init = np.random.rand()*(an_Omega_max-an_Omega_min)+an_Omega_min
@@ -257,7 +257,7 @@ def gaussian_proposal(x, sigma=0.1):
     # Draw x_star
     N = len(x)
     dx = np.random.randn(N) 
-    if one_planet:
+    if one_planet_fit:
         dx[0] = dx[0]*sigma[0]
         dx[1] = dx[1]*sigma[1]
         dx[2] = dx[2]*sigma[2]
@@ -293,7 +293,7 @@ def gen_gaus_prop_sig():
     #(incl, ecc, anO, po, M0, mp, var_uke,period)
     import numpy as np
     gp_sig = np.zeros(n_dim, dtype=np.float64)
-    if one_planet:
+    if one_planet_fit:
         gp_sig[0]=(cos_incl_max-cos_incl_min)*init_ratio_gp
         gp_sig[1]=(ecc_max-ecc_min)*init_ratio_gp
         gp_sig[2]=(an_Omega_max-an_Omega_min)*init_ratio_gp
@@ -348,7 +348,7 @@ def mh_sampler(x0, time_con, data, ln_likelhd_func, beta, delta_dx_dy_sig, prior
     # first samples
     chain[0,:] = x0
     # delta dx dy in mu_as
-    if one_planet:
+    if one_planet_fit:
         delta_dx_dy_init = gen_dx_dy_mc(x0, time_con)
     else:
         delta_dx_dy_init = gen_dx_dy_mc_2p(x0, time_con)
@@ -375,7 +375,7 @@ def mh_sampler(x0, time_con, data, ln_likelhd_func, beta, delta_dx_dy_sig, prior
         ####
         #if option 4: Just reject any proposals that fall outside the unit square
         if para_boundary(xs):
-            if one_planet:
+            if one_planet_fit:
                 delta_dx_dy_one = gen_dx_dy_mc(xs, time_con)
             else:
                 delta_dx_dy_one = gen_dx_dy_mc_2p(xs, time_con)
@@ -459,7 +459,7 @@ def mh_crit_beta(x_i, x_j, beta_i, beta_j, time_con, ln_likelhd_func, delta_dx_d
     np.random.seed()
     ##################
     # delta dx dy in mu_as
-    if one_planet:
+    if one_planet_fit:
         delta_dx_dy_xi = gen_dx_dy_mc(x_i, time_con)
         delta_dx_dy_xj = gen_dx_dy_mc(x_j, time_con)
     else:
@@ -502,7 +502,7 @@ def gen_init_sigma_prop(n_PT, init_sigma_prop):
 def sigma_tune_boundary(scale_min, scale_max):
     import numpy as np
     sigma_bound = np.zeros((n_dim,2), dtype=float)
-    if one_planet:
+    if one_planet_fit:
         sigma_bound[0,0]=(cos_incl_max-cos_incl_min)*scale_min
         sigma_bound[0,1]=(cos_incl_max-cos_incl_min)*scale_max
         sigma_bound[1,0]=(ecc_max-ecc_min)*scale_min
