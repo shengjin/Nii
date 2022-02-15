@@ -265,7 +265,7 @@ def gen_dx_dy_mc_2p(x, time_con):
     au = period_2_au(x[7], ms_Msun)
     as_cal_con = cal_t_radec(time_con,x[5],ms_Msun,au,d_pc,x[1],x[3],x[0],x[2],x[4])
     au2 = period_2_au(x[14], ms_Msun)
-    as_cal_con2 = cal_t_radec(time_con,x[13],ms_Msun,au,d_pc,x[9],x[11],x[8],x[10],x[12])
+    as_cal_con2 = cal_t_radec(time_con,x[13],ms_Msun,au2,d_pc,x[9],x[11],x[8],x[10],x[12])
     as_mu1 = np.transpose(as_cal_con)
     as_mu2 = np.transpose(as_cal_con2)
     as_mu = as_mu1 + as_mu2
