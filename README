@@ -1,3 +1,8 @@
+The Python version code is poorly organised. Please replace it with the new C version code, nii-c (https://github.com/shengjin/nii-c), which should lead to a speed increase of approximately 6400 times.
+
+
+
+
 ##############################
 ##############################
 
